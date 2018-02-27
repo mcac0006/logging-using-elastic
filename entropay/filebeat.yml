@@ -1,0 +1,7 @@
+filebeat.prospectors:
+- type: log
+  paths:
+    - /usr/share/filebeat/log/server.log
+include_lines: ['^\d{4}-\d{2}-\d{2}']
+output.logstash:
+  hosts: ["logstash:5044"]

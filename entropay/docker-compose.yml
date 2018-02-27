@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  entropay:
+    build:
+      context: .
+      dockerfile: entropay_Dockerfile
+    volumes:
+      - log-files:/opt/jboss/standalone/log/
+
+  filebeat:
+    depends_on:
+      - entropay
+      - logstash
+    build:
+      context: .
+      dockerfile: filebeat_Dockerfile
+    volumes:
+      - log-files:/usr/share/filebeat/log/
+    networks:
+      - apache_filebeat_logstash_network
+
+  logstash:
+    build:
+      context: .
+      dockerfile: logstash_Dockerfile
+    networks:
+      - apache_filebeat_logstash_network
+      - ignitemt
+
+volumes:
+  log-files:
+
+networks:
+  apache_filebeat_logstash_network:
+  ignitemt:
+    external: true

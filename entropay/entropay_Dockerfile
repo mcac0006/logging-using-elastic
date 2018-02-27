@@ -1,0 +1,4 @@
+FROM jboss/wildfly:9.0.1.Final
+
+RUN mkdir -p /opt/jboss/standalone/log/
+COPY server.log /opt/jboss/standalone/log/server.log

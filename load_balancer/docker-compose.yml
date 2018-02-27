@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  load_balancer:
+    build:
+      context: .
+      dockerfile: load_balancer_Dockerfile
+    volumes:
+      - log-files:/var/log/apache/
+
+  filebeat:
+    depends_on:
+      - load_balancer
+      - logstash
+    build:
+      context: .
+      dockerfile: filebeat_Dockerfile
+    volumes:
+      - log-files:/usr/share/filebeat/log/
+    networks:
+      - apache_filebeat_logstash_network
+
+  logstash:
+    build:
+      context: .
+      dockerfile: logstash_Dockerfile
+    networks:
+      - apache_filebeat_logstash_network
+      - ignitemt
+
+volumes:
+  log-files:
+
+networks:
+  apache_filebeat_logstash_network:
+  ignitemt:
+    external: true
